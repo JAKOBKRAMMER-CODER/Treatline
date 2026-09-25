@@ -8,5 +8,5 @@
 // this. Row Level Security (set up by schema.sql) is what actually
 // protects your data, not keeping this key secret.
 
-const SUPABASE_URL = "PASTE_YOUR_SUPABASE_URL_HERE";
-const SUPABASE_ANON_KEY = "PASTE_YOUR_SUPABASE_ANON_KEY_HERE";
+const SUPABASE_URL = "https://nokkgdxbwpyvluggevjz.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_R7LuCO5vjTDsbBiJz5mBxQ_dYBasRsF";
