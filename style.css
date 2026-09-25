@@ -1,0 +1,180 @@
+:root{
+  --ink:#1b1d1f;
+  --paper:#f6f4ef;
+  --panel:#fffdf9;
+  --line:#e2ddd1;
+  --accent:#2f6f5e;
+  --accent-soft:#e5efe9;
+  --bubble-me:#2f6f5e;
+  --bubble-me-text:#fbfaf6;
+  --bubble-them:#efece3;
+  --muted:#7c7a72;
+  --danger:#a5432f;
+}
+*{box-sizing:border-box;}
+html,body{height:100%;margin:0;}
+body{
+  font-family:'Iowan Old Style','Georgia',serif;
+  background:var(--paper);
+  color:var(--ink);
+}
+.hidden{ display:none !important; }
+button{ font-family:inherit; }
+
+/* ---------- Auth screen ---------- */
+#auth-screen{
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+#auth-card{
+  width:340px;
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:32px 28px;
+}
+#auth-card h1{ margin:0 0 2px; font-size:26px; font-weight:600; }
+.tagline{ margin:0 0 22px; color:var(--muted); font-size:13px; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; }
+#auth-tabs{ display:flex; gap:4px; margin-bottom:18px; background:var(--paper); border-radius:10px; padding:4px; }
+.tab-btn{
+  flex:1; border:none; background:none; padding:8px; border-radius:8px;
+  cursor:pointer; font-size:13.5px; color:var(--muted);
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+}
+.tab-btn.active{ background:var(--panel); color:var(--ink); font-weight:600; box-shadow:0 1px 2px rgba(0,0,0,.06); }
+.auth-form{ display:flex; flex-direction:column; gap:10px; }
+.auth-form input{
+  padding:11px 13px; border:1px solid var(--line); border-radius:9px;
+  font-size:14px; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  background:var(--paper); color:var(--ink);
+}
+.auth-form input:focus{ outline:2px solid var(--accent); outline-offset:1px; }
+.auth-form button[type=submit]{
+  margin-top:4px; padding:11px; border:none; border-radius:9px;
+  background:var(--accent); color:#fff; font-size:14px; font-weight:600; cursor:pointer;
+}
+.auth-form button[type=submit]:hover{ opacity:.9; }
+.auth-error{ color:var(--danger); font-size:12.5px; min-height:16px; margin:2px 0 0; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; }
+
+/* ---------- App shell ---------- */
+#app{
+  display:flex;
+  height:100vh;
+  max-width:960px;
+  margin:0 auto;
+  border-left:1px solid var(--line);
+  border-right:1px solid var(--line);
+  background:var(--panel);
+}
+#sidebar{ width:300px; flex-shrink:0; border-right:1px solid var(--line); display:flex; flex-direction:column; }
+#sidebar-head{
+  padding:18px 18px 12px; border-bottom:1px solid var(--line);
+  display:flex; align-items:center; justify-content:space-between;
+}
+#sidebar-head h1{ font-size:19px; margin:0; font-weight:600; }
+#me-username{ margin:2px 0 0; font-size:12px; color:var(--muted); font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; }
+#logout-btn{
+  border:none; background:none; font-size:16px; color:var(--muted); cursor:pointer;
+  width:30px; height:30px; border-radius:8px;
+}
+#logout-btn:hover{ background:var(--paper); color:var(--danger); }
+
+#new-chat-box{ padding:12px 14px; border-bottom:1px solid var(--line); position:relative; }
+#user-search{
+  width:100%; padding:9px 12px; border:1px solid var(--line); border-radius:9px;
+  font-size:13.5px; background:var(--paper); color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+}
+#user-search:focus{ outline:2px solid var(--accent); outline-offset:1px; }
+#user-results{
+  position:absolute; left:14px; right:14px; top:48px; z-index:5;
+  background:var(--panel); border:1px solid var(--line); border-radius:9px;
+  box-shadow:0 6px 18px rgba(0,0,0,.08); overflow:hidden;
+}
+.user-result{
+  padding:9px 12px; cursor:pointer; font-size:13.5px;
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  display:flex; align-items:center; gap:9px;
+}
+.user-result:hover{ background:var(--accent-soft); }
+
+#contacts{ overflow-y:auto; flex:1; }
+.contact{
+  display:flex; align-items:center; gap:11px; padding:12px 18px; cursor:pointer;
+  border-bottom:1px solid var(--line); font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+}
+.contact:hover{ background:#faf8f2; }
+.contact.active{ background:var(--accent-soft); }
+.avatar{
+  width:38px; height:38px; border-radius:50%; background:var(--accent); color:#fff;
+  display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:600; flex-shrink:0;
+  position:relative;
+}
+.avatar .presence{
+  position:absolute; bottom:-1px; right:-1px; width:10px; height:10px; border-radius:50%;
+  background:#9c9891; border:2px solid var(--panel);
+}
+.avatar .presence.online{ background:#3fa66b; }
+.contact-meta{ min-width:0; flex:1; }
+.contact-name{ font-size:14px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.contact-preview{ font-size:12.5px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px; }
+.contact-time{ font-size:11px; color:var(--muted); flex-shrink:0; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; }
+.unread-badge{
+  background:var(--accent); color:#fff; font-size:10.5px; font-weight:700;
+  min-width:17px; height:17px; border-radius:9px; display:flex; align-items:center; justify-content:center;
+  padding:0 5px; flex-shrink:0;
+}
+
+/* ---------- Chat pane ---------- */
+#chat{ flex:1; display:flex; flex-direction:column; min-width:0; position:relative; }
+#empty-state{
+  flex:1; display:flex; align-items:center; justify-content:center; color:var(--muted);
+  font-size:14px; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; text-align:center; padding:40px;
+}
+#chat-active{ display:flex; flex-direction:column; height:100%; }
+#chat-head{ padding:15px 22px; border-bottom:1px solid var(--line); display:flex; align-items:center; gap:12px; }
+#chat-head .avatar{ width:34px; height:34px; font-size:13px; }
+#chat-head-name{ font-size:15.5px; font-weight:600; }
+#chat-head-status{ font-size:12px; color:var(--muted); font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; }
+
+#messages{ flex:1; overflow-y:auto; padding:22px; display:flex; flex-direction:column; gap:10px; }
+.msg-row{ display:flex; }
+.msg-row.me{ justify-content:flex-end; }
+.bubble{
+  max-width:62%; padding:9px 14px; border-radius:16px; font-size:14.5px; line-height:1.42;
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; word-wrap:break-word;
+}
+.msg-row.them .bubble{ background:var(--bubble-them); color:var(--ink); border-bottom-left-radius:4px; }
+.msg-row.me .bubble{ background:var(--bubble-me); color:var(--bubble-me-text); border-bottom-right-radius:4px; }
+.msg-time{ font-size:10.5px; color:var(--muted); margin-top:3px; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; }
+.msg-row.me .msg-time{ text-align:right; }
+
+#typing-indicator{
+  padding:0 22px 8px; font-size:12px; color:var(--muted); font-style:italic;
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+}
+
+#composer{ display:flex; align-items:flex-end; gap:10px; padding:14px 18px; border-top:1px solid var(--line); }
+#msg-input{
+  flex:1; resize:none; border:1px solid var(--line); background:var(--paper); border-radius:18px;
+  padding:10px 16px; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  font-size:14.5px; max-height:120px; line-height:1.4; color:var(--ink);
+}
+#msg-input:focus{ outline:2px solid var(--accent); outline-offset:1px; }
+#send-btn{
+  background:var(--accent); color:#fff; border:none; border-radius:50%; width:40px; height:40px;
+  flex-shrink:0; cursor:pointer; display:flex; align-items:center; justify-content:center;
+}
+#send-btn:hover{ opacity:.88; }
+#send-btn:active{ transform:scale(0.94); }
+
+#messages::-webkit-scrollbar, #contacts::-webkit-scrollbar{ width:8px; }
+#messages::-webkit-scrollbar-thumb, #contacts::-webkit-scrollbar-thumb{ background:var(--line); border-radius:4px; }
+
+@media (max-width:640px){
+  #sidebar{ width:100vw; position:absolute; inset:0; z-index:10; background:var(--panel); }
+  #sidebar.chat-open{ display:none; }
+  #chat{ width:100vw; }
+}

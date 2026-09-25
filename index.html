@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Threadline</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="auth-screen">
+  <div id="auth-card">
+    <h1>Threadline</h1>
+    <p class="tagline">A quiet place to talk</p>
+
+    <div id="auth-tabs">
+      <button class="tab-btn active" data-tab="login">Log in</button>
+      <button class="tab-btn" data-tab="signup">Sign up</button>
+    </div>
+
+    <form id="login-form" class="auth-form">
+      <input type="email" id="login-email" placeholder="Email" autocomplete="username" required>
+      <input type="password" id="login-password" placeholder="Password" autocomplete="current-password" required>
+      <button type="submit">Log in</button>
+      <p class="auth-error" id="login-error"></p>
+    </form>
+
+    <form id="signup-form" class="auth-form hidden">
+      <input type="text" id="signup-username" placeholder="Choose a username" autocomplete="username" required>
+      <input type="email" id="signup-email" placeholder="Email" autocomplete="email" required>
+      <input type="password" id="signup-password" placeholder="Choose a password (6+ chars)" autocomplete="new-password" required>
+      <button type="submit">Create account</button>
+      <p class="auth-error" id="signup-error"></p>
+    </form>
+  </div>
+</div>
+
+<div id="app" class="hidden">
+  <div id="sidebar">
+    <div id="sidebar-head">
+      <div>
+        <h1>Threadline</h1>
+        <p id="me-username"></p>
+      </div>
+      <button id="logout-btn" title="Log out">⏻</button>
+    </div>
+
+    <div id="new-chat-box">
+      <input type="text" id="user-search" placeholder="Find someone by username…">
+      <div id="user-results"></div>
+    </div>
+
+    <div id="contacts"></div>
+  </div>
+
+  <div id="chat">
+    <div id="empty-state">
+      <p>Select a conversation, or search a username to start one.</p>
+    </div>
+
+    <div id="chat-active" class="hidden">
+      <div id="chat-head">
+        <div class="avatar" id="chat-head-avatar"></div>
+        <div>
+          <div id="chat-head-name"></div>
+          <div id="chat-head-status">&nbsp;</div>
+        </div>
+      </div>
+      <div id="messages"></div>
+      <div id="composer">
+        <textarea id="msg-input" rows="1" placeholder="Write a message…"></textarea>
+        <button id="send-btn" aria-label="Send message">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path d="M3 11L21 3L13 21L11 13L3 11Z" stroke="white" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
