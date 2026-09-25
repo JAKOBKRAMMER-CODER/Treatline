@@ -2,7 +2,7 @@ const initials = n => n.split(' ').map(p=>p[0]).join('').slice(0,2).toUpperCase(
 const escapeHtml = str => { const d = document.createElement('div'); d.textContent = str; return d.innerHTML; };
 const fmtTime = iso => new Date(iso).toLocaleTimeString([], { hour:'numeric', minute:'2-digit' });
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let me = null; // { id, username, email }
 let conversations = [];
@@ -29,7 +29,7 @@ document.getElementById('login-form').addEventListener('submit', async e=>{
   const errEl = document.getElementById('login-error');
   errEl.textContent = '';
 
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+  const { data, error } = await sb.auth.signInWithPassword({ email, password });
   if (error) { errEl.textContent = translateError(error.message); return; }
   await afterLogin(data.user);
 });
@@ -44,7 +44,7 @@ document.getElementById('signup-form').addEventListener('submit', async e=>{
 
   if (username.length < 2) { errEl.textContent = 'Username must be at least 2 characters'; return; }
 
-  const { data, error } = await supabase.auth.signUp({ email, password });
+  const { data, error } = await sb.auth.signUp({ email, password });
   if (error) { errEl.textContent = translateError(error.message); return; }
 
   if (!data.user) {
@@ -52,7 +52,7 @@ document.getElementById('signup-form').addEventListener('submit', async e=>{
     return;
   }
 
-  const { error: profileError } = await supabase.from('profiles').insert({
+  const { error: profileError } = await sb.from('profiles').insert({
     id: data.user.id, username
   });
   if (profileError) {
@@ -66,8 +66,8 @@ document.getElementById('signup-form').addEventListener('submit', async e=>{
 });
 
 document.getElementById('logout-btn').addEventListener('click', async ()=>{
-  if (messageChannel) supabase.removeChannel(messageChannel);
-  await supabase.auth.signOut();
+  if (messageChannel) sb.removeChannel(messageChannel);
+  await sb.auth.signOut();
   location.reload();
 });
 
@@ -81,7 +81,7 @@ function translateError(msg) {
 // ---------- Bootstrap ----------
 
 async function tryResume() {
-  const { data: { session } } = await supabase.auth.getSession();
+  const { data: { session } } = await sb.auth.getSession();
   if (session?.user) {
     await afterLogin(session.user);
   } else {
@@ -92,7 +92,7 @@ async function tryResume() {
 async function afterLogin(user, knownUsername) {
   let username = knownUsername;
   if (!username) {
-    const { data: profile } = await supabase.from('profiles').select('username').eq('id', user.id).single();
+    const { data: profile } = await sb.from('profiles').select('username').eq('id', user.id).single();
     username = profile?.username || user.email;
   }
   me = { id: user.id, username, email: user.email };
@@ -108,7 +108,7 @@ async function afterLogin(user, knownUsername) {
 // ---------- Realtime subscription ----------
 
 function subscribeToMessages() {
-  messageChannel = supabase
+  messageChannel = sb
     .channel('messages-listen')
     .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, payload=>{
       handleIncomingMessage(payload.new);
@@ -129,7 +129,7 @@ function handleIncomingMessage(msg) {
 // ---------- Conversations list ----------
 
 async function loadConversations() {
-  const { data: convos, error } = await supabase
+  const { data: convos, error } = await sb
     .from('conversations')
     .select('id, user_a, user_b')
     .or(`user_a.eq.${me.id},user_b.eq.${me.id}`);
@@ -138,11 +138,11 @@ async function loadConversations() {
 
   const enriched = await Promise.all(convos.map(async c=>{
     const otherId = c.user_a === me.id ? c.user_b : c.user_a;
-    const { data: profile } = await supabase.from('profiles').select('username').eq('id', otherId).single();
-    const { data: lastMsgs } = await supabase
+    const { data: profile } = await sb.from('profiles').select('username').eq('id', otherId).single();
+    const { data: lastMsgs } = await sb
       .from('messages').select('text, created_at')
       .eq('conversation_id', c.id).order('created_at', { ascending:false }).limit(1);
-    const { count: unread } = await supabase
+    const { count: unread } = await sb
       .from('messages').select('id', { count:'exact', head:true })
       .eq('conversation_id', c.id).eq('read', false).neq('sender_id', me.id);
 
@@ -190,7 +190,7 @@ searchInput.addEventListener('input', ()=>{
   const resultsEl = document.getElementById('user-results');
   if (!q) { resultsEl.innerHTML = ''; return; }
   searchDebounce = setTimeout(async ()=>{
-    const { data: users } = await supabase
+    const { data: users } = await sb
       .from('profiles').select('id, username')
       .ilike('username', `%${q}%`).neq('id', me.id).limit(20);
     resultsEl.innerHTML = '';
@@ -219,18 +219,18 @@ document.addEventListener('click', e=>{
 async function startOrFindConversation(otherId) {
   const [a, b] = me.id < otherId ? [me.id, otherId] : [otherId, me.id];
 
-  const { data: existing } = await supabase
+  const { data: existing } = await sb
     .from('conversations').select('id')
     .eq('user_a', a).eq('user_b', b).maybeSingle();
 
   if (existing) return existing.id;
 
-  const { data: created, error } = await supabase
+  const { data: created, error } = await sb
     .from('conversations').insert({ user_a: a, user_b: b }).select('id').single();
 
   if (error) {
     // race condition: someone else created it between our check and insert
-    const { data: retry } = await supabase
+    const { data: retry } = await sb
       .from('conversations').select('id').eq('user_a', a).eq('user_b', b).single();
     return retry.id;
   }
@@ -250,7 +250,7 @@ async function openConversation(conversationId, otherId, otherUsername) {
 
   renderConversations();
 
-  const { data: msgs } = await supabase
+  const { data: msgs } = await sb
     .from('messages').select('*')
     .eq('conversation_id', conversationId)
     .order('created_at', { ascending:true });
@@ -265,7 +265,7 @@ async function openConversation(conversationId, otherId, otherUsername) {
 }
 
 async function markRead(conversationId) {
-  await supabase.from('messages')
+  await sb.from('messages')
     .update({ read:true })
     .eq('conversation_id', conversationId)
     .neq('sender_id', me.id)
@@ -300,7 +300,7 @@ async function send() {
   input.value = '';
   input.style.height = 'auto';
 
-  const { error } = await supabase.from('messages').insert({
+  const { error } = await sb.from('messages').insert({
     conversation_id: activeConvoId,
     sender_id: me.id,
     text
