@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Threadline</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="auth-screen">
+  <div id="auth-card">
+    <h1>Threadline</h1>
+    <p class="tagline">A quiet place to talk</p>
+
+    <div id="auth-tabs">
+      <button class="tab-btn active" data-tab="login">Log in</button>
+      <button class="tab-btn" data-tab="signup">Sign up</button>
+    </div>
+
+    <form id="login-form" class="auth-form">
+      <input type="email" id="login-email" placeholder="Email" autocomplete="username" required>
+      <input type="password" id="login-password" placeholder="Password" autocomplete="current-password" required>
+      <button type="submit">Log in</button>
+      <p class="auth-error" id="login-error"></p>
+    </form>
+
+    <form id="signup-form" class="auth-form hidden">
+      <input type="text" id="signup-username" placeholder="Choose a username" autocomplete="username" required>
+      <input type="email" id="signup-email" placeholder="Email" autocomplete="email" required>
+      <input type="password" id="signup-password" placeholder="Choose a password (6+ chars)" autocomplete="new-password" required>
+      <button type="submit">Create account</button>
+      <p class="auth-error" id="signup-error"></p>
+    </form>
+  </div>
+</div>
+
+<div id="notification-prompt" class="hidden">
+  <span>Get notified about new messages?</span>
+  <button id="notif-allow-btn">Allow</button>
+  <button id="notif-dismiss-btn">Not now</button>
+</div>
+
+<div id="app" class="hidden">
+  <div id="sidebar">
+    <div id="sidebar-head">
+      <div>
+        <h1>Threadline</h1>
+        <p id="me-username"></p>
+      </div>
+      <div class="head-actions">
+        <button id="theme-toggle-btn" title="Toggle dark mode" aria-label="Toggle dark mode">🌙</button>
+        <button id="new-group-btn" title="New group" aria-label="New group">👥+</button>
+        <button id="logout-btn" title="Log out">⏻</button>
+      </div>
+    </div>
+
+    <div id="new-chat-box">
+      <input type="text" id="user-search" placeholder="Find someone by username…">
+      <div id="user-results"></div>
+    </div>
+
+    <div id="search-messages-box">
+      <input type="text" id="message-search-input" placeholder="Search messages…">
+      <div id="message-search-results"></div>
+    </div>
+
+    <div id="contacts"></div>
+
+    <div id="new-group-panel" class="hidden">
+      <div id="new-group-head">
+        <button id="close-new-group" aria-label="Close">←</button>
+        <h2>New group</h2>
+      </div>
+      <div id="new-group-body">
+        <input type="text" id="group-name-input" placeholder="Group name" maxlength="40">
+        <input type="text" id="group-member-search" placeholder="Add people by username…">
+        <div id="group-member-results"></div>
+        <div id="group-selected-members"></div>
+        <button class="create" id="create-group-btn">Create group</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="chat">
+    <div id="empty-state">
+      <p>Select a conversation, or search a username to start one.</p>
+    </div>
+
+    <div id="chat-active" class="hidden">
+      <div id="chat-head">
+        <button id="back-to-list-btn" aria-label="Back to chats">←</button>
+        <div class="avatar" id="chat-head-avatar"></div>
+        <div>
+          <div id="chat-head-name"></div>
+          <div id="chat-head-status">offline</div>
+        </div>
+        <button id="group-invite-btn" class="hidden" title="Invite link">🔗</button>
+      </div>
+      <div id="messages"></div>
+      <div id="typing-indicator" class="hidden"></div>
+      <div id="voice-recording-ui" class="hidden">
+        <span class="rec-dot"></span> Recording <span id="voice-timer">00:00</span>
+        <button id="voice-cancel">Cancel</button>
+      </div>
+      <div id="composer">
+        <button id="attach-btn" aria-label="Attach file" title="Attach file">📎</button>
+        <input type="file" id="file-input" class="hidden" accept="image/*,.pdf,.doc,.docx,.txt,.zip">
+        <textarea id="msg-input" rows="1" placeholder="Write a message…"></textarea>
+        <button id="voice-btn" aria-label="Record voice message" title="Record voice message">🎤</button>
+        <button id="send-btn" aria-label="Send message">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path d="M3 11L21 3L13 21L11 13L3 11Z" stroke="white" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
