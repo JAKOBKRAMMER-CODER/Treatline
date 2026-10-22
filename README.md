@@ -1,4 +1,4 @@
-# Threadline v2 — Groups, files, voice, reactions & more
+# Threadline v8 — Groups, files, voice, reactions & more
 
 Builds on the earlier GitHub Pages + Supabase version. New: group chats (with invite links), image/file attachments, voice messages, edit/delete, emoji reactions, and online/typing status.
 
